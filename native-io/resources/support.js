@@ -4,6 +4,7 @@ const kBadNativeIoNames = [
   "has-dash",
   "has.dot",
   "has/slash",
+  "long_name".repeat(20),
 ];
 
 // Returns a handle to a newly created file that holds some data.
