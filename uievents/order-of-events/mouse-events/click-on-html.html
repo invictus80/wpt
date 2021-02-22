@@ -5,9 +5,11 @@
     <title>Clicking on the html element itself fires a click event</title>
     <link rel="author" title="Chris Rebert" href="http://chrisrebert.com">
     <link rel="help" href="https://w3c.github.io/uievents/#event-type-click">
-    <meta name="flags" content="interact">
     <script src="/resources/testharness.js"></script>
     <script src="/resources/testharnessreport.js"></script>
+    <script src="/resources/testdriver.js"></script>
+    <script src="/resources/testdriver-actions.js"></script>
+    <script src="/resources/testdriver-vendor.js"></script>
     <style>
 html {
   background-color: blue;
@@ -19,13 +21,13 @@ body {
   margin: 0;
 }
 #guineapig {
-  background-color: white;
+  background-color: red;
   padding-top: 50px;/* Text is easier to see when it's not at the exact top of the viewport */
   margin-top: 0;/* Ensure there's no exposed html element above this */
   margin-bottom: 100px;/* Expose an area of the html element itself */
 }
 #other {
-  background-color: white;
+  background-color: yellow;
   height: 100vh;/* Push the rest of the html element outside of the viewport */
 }
     </style>
@@ -35,7 +37,7 @@ body {
     <p id="other">&nbsp;</p><!-- Needed to prevent the margin from collapsing -->
     <script>
 setup({explicit_timeout: true});
-async_test(function(t) {
+promise_test(async function(t) {
   document.documentElement.addEventListener('click', function (event) {
     t.step(function () {
       assert_equals(event.target, document.documentElement, 'target of click event must be the html element');
@@ -52,6 +54,13 @@ async_test(function(t) {
       t.done();
     });
   }, false);
+
+  const xPositionInHtml = yPositionInHtml = 150;
+  await new test_driver.Actions()
+    .pointerMove(xPositionInHtml, yPositionInHtml)
+    .pointerDown()
+    .pointerUp()
+    .send();
 }, "Clicking on the html element itself should fire a click event targeted at the html element");
     </script>
   </body>
